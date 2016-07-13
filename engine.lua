@@ -7,14 +7,13 @@ function engine:setState(state)
 	state:init()
 end
 
-function engine:update()
-	self.state:update()
+function engine:update(dt)
+	self.state:update(dt)
 end
 
 function engine:draw()
 	self.state:draw()
-	
-end
 
+end
 
 return engine

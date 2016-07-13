@@ -10,7 +10,7 @@ function titleState:init()
 	love.graphics.setBackgroundColor(255, 235, 205)
 end
 
-function titleState.update()
+function titleState.update(dt)
 	x, y = love.mouse.getPosition()
 end
 

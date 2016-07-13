@@ -11,7 +11,7 @@ function love.draw()
 end
 
 function love.update(dt)
-	engine:update()
+	engine:update(dt)
 end
 
 function love.keypressed(k)
