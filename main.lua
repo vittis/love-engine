@@ -1,32 +1,22 @@
-titleState = require('titleState')
 engine = require('engine')
 
-
 function love.load()
-	engine:setState(titleState)
+	engine:setup()
+	engine:switch('titleScene')
 end
 
 function love.draw()
-  engine:draw()
 end
 
 function love.update(dt)
-	engine:update(dt)
 end
 
 function love.keypressed(k)
-	if k == 'escape' then
-		love.event.quit()
+	if (k == 'x') then
+		print(engine.stateName)
 	end
-end
+	if (k == 'p' and engine.stateName~='pauseScene') then
+		engine:push('pauseScene')
+	end
 
---[[ Funcao q confirma a saida com um popup
-function love.quit()
-    opcaoSelecionada = love.window.showMessageBox("Atenção", "Realmente deseja sair?",
-			{"Sim", "Não"})
-		if opcaoSelecionada == 1 then
-			return false --aborta o quit
-		else
-			return true
-		end
-end]]
+end
