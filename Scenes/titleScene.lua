@@ -38,7 +38,7 @@ function titleScene:draw()
 
   love.graphics.setColor(255, 0, 0)
 
-	love.graphics.line(love.graphics.getWidth()/2, love.graphics.getHeight()/2, x, y)
+	love.graphics.line(love.graphics.getWidth()/2, love.graphics.getHeight()/2, x, y, 50, 50)
 end
 
 function titleScene:keypressed(k)

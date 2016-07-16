@@ -5,6 +5,8 @@ engine.GS = require('hump/gamestate')
 engine.previousStateName = 'empty'
 engine.stateName = 'empty'
 
+local utility = {}
+
 function engine:setup()
 	self.GS.registerEvents()
 end
@@ -12,7 +14,7 @@ end
 function engine:switch(stateFileName)
 	local finalStateFileName
 
-	if fileExists(stateFileName) then
+	if utility.fileExists(stateFileName) then
 	 	finalStateFileName = stateFileName
 	else
 		finalStateFileName = 'Scenes/' .. stateFileName
@@ -26,7 +28,7 @@ end
 function engine:push(stateFileName)
 	local finalStateFileName
 
-	if fileExists(stateFileName) then
+	if utility.fileExists(stateFileName) then
 	 	finalStateFileName = stateFileName
 	else
 		finalStateFileName = 'Scenes/' .. stateFileName
@@ -46,7 +48,7 @@ function engine:getCurrentState()
 	return self.GS.current()
 end
 
-local function fileExists(fileName)
+function utility.fileExists(fileName)
 	local f=io.open(fileName..'.lua',"r")
 	if f~=nil then
 		io.close(f)
