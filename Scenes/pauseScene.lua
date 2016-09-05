@@ -1,14 +1,13 @@
-pause = {}
+pauseScene.name = 'pauseScene'
 
-engine = require('engine')
 local W, H
 
-function pause:enter(from)
+function pauseScene:enter(from)
   W, H = love.graphics.getWidth(), love.graphics.getHeight()
   self.from = from
 end
 
-function pause:draw()
+function pauseScene:draw()
   self.from:draw()
   love.graphics.setColor(0,0,0, 100)
   love.graphics.rectangle('fill', 0,0, W,H)
@@ -16,10 +15,8 @@ function pause:draw()
   love.graphics.printf('PAUSE', 0, H/2, W, 'center')
 end
 
-function pause:keypressed(k)
+function pauseScene:keypressed(k)
     if k == 'p' then
-        return engine:pop()
+        engine:pop()
     end
 end
-
-return pause

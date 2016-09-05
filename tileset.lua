@@ -1,30 +1,27 @@
-tileset = {tileWidth=0, tileHeight=0, fileName="empty", tileset, rows, cols}
+Tileset = {}
+Tileset.__index = Tileset
 
-local Sprite = require('sprite')
+function Tileset:new(fileName, tileWidth, tileHeight)
+  local self = setmetatable({}, Tileset)
 
-function tileset:new(o, fileName, tileWidth, tileHeight)
-  o = o or {}
-  setmetatable(o, self)
-  self.__index = self
-
-  self.tileset = Sprite:new(nil, fileName)
+  self.atlas = love.graphics.newImage(fileName)
   self.tileWidth = tileWidth
   self.tileHeight = tileHeight
+  self.rows = self.atlas:getHeight()/tileHeight;
+  self.cols = self.atlas:getWidth()/tileWidth;
+  self.tiles = {}
 
-  self.rows = self.tileset.height/tileHeight;
-  self.cols = self.tileset.width/tileWidth;
+  for index=0, self.rows*self.cols do
+    local i = math.floor(index/self.cols)
+    local j = index%self.cols
+    self.tiles[index] = love.graphics.newQuad(j*tileWidth,i*tileHeight, tileWidth, tileHeight, self.atlas:getDimensions())
+  end
 
-  return o
+  return self
 end
 
-function tileset:draw(index, x, y, r)
+function Tileset:draw(index, x, y, r)
   if(index >= 0) then
-  		local i = index/self.cols;
-  		local j = index%self.cols;
-
-  		self.tileset:setQuad(j*self.tileWidth,i*self.tileHeight, self.tileWidth, self.tileHeight);
-  		self.tileset:draw(x, y, r)
+      love.graphics.draw(self.atlas, self.tiles[index], x, y, r)
   end
 end
-
-return tileset

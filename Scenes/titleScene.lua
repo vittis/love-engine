@@ -1,10 +1,9 @@
-local titleScene = {}
-
-local Engine = require('engine')
+titleScene.name = 'titleScene'
 
 local x, y
 local width, height = love.graphics.getDimensions()
 
+--Gamestate callback
 function titleScene:init()
 	x, y = 50,50
 	self.mainFont = love.graphics.newFont("KeepCalm.ttf", 60);
@@ -13,7 +12,6 @@ function titleScene:init()
 end
 
 function titleScene:enter(previous)
-
 end
 
 function titleScene:update(dt)
@@ -43,8 +41,6 @@ end
 
 function titleScene:keypressed(k)
 	if (k == 'space') then
-		engine:switch('gameScene')
+		engine:switch(gameScene)
 	end
 end
-
-return titleScene

@@ -1,56 +1,57 @@
-sprite = {texture="noImage", quad, width=0, height=0, framecount=1, frameTime=1, currentFrame=0, timeElapsed=0, rows=1, cols=1}
+Sprite         = {}
+Sprite.__index = Sprite
 
-function sprite:new(o, fileName, frameCount, frameTime, rows, cols)
-  o = o or {}
-  setmetatable(o, self)
-  self.__index = self
+function Sprite:_init(image, frameCount, frameTime)
+  local self = setmetatable({}, Sprite)
 
-  self.texture = love.graphics.newImage(fileName)
-  self.width, self.height = self.texture:getDimensions()
-  self.quad = love.graphics.newQuad(0, 0, self.width, self.height, self.texture:getDimensions())
-  self.frameCount = frameCount or 1
-  self.frameTime = frameTime or 1
-  if(self.rows == 1) then
-			self:setQuad(0,0, self.width/self.frameCount, self.height);
-	else
-			self:setQuad(0,0, self.width/self.cols, self.height/self.rows);
-	end
-  return o
+  self.image        = love.graphics.newImage(image)
+  self.scaleX       = 1
+  self.scaleY       = 1
+  self.frames       = {}
+  self.frameCount    = frameCount or 1
+  self.currentFrame = 1
+  self.timeElapsed  = 0
+  self.frameTime    = frameTime or 1
+
+  for i=1, self.frameCount, 1 do
+    self.frames[i] = love.graphics.newQuad(
+      (i-1)*(self.image:getWidth() / self.frameCount),
+      0,
+      self.image:getWidth() / self.frameCount,
+      self.image:getHeight(),
+      self.image:getDimensions()
+     )
+  end
+
+  return self
 end
 
-function sprite:update(dt)
+function Sprite:update(dt)
   self.timeElapsed = self.timeElapsed + dt
-  if (self.timeElapsed > self.frameTime) then
-    self.currentFrame = self.currentFrame + 1
-    if (self.currentFrame == self.frameCount) then
-      self.currentFrame = 0
+
+  if self.timeElapsed > self.frameTime then
+    if self.currentFrame < self.frameCount then
+      self.currentFrame = self.currentFrame + 1
+    else
+      self.currentFrame = 1
     end
-    self:setFrame(self.currentFrame)
-    self.timeElapsed=0
+    self.timeElapsed = 0
   end
 end
 
-function sprite:setFrame(frame)
-  self.currentFrame = frame
-  local frameWidth = self.width/self.cols;
-	local frameHeight = self.height/self.rows;
-  if (self.rows == 1) then
-    self:setQuad((self.width/self.frameCount)*self.currentFrame,0, self.width/self.frameCount, self.height)
-  else
-    self:setQuad((self.currentFrame%self.cols)*self.frameWidth, (self.currentFrame/self.cols)*self.frameHeight, self.frameWidth, self.frameHeight)
-  end
+function Sprite:draw(x, y, angle)
+  love.graphics.draw(
+    self.image,
+    self.frames[self.currentFrame],
+    x, y, angle,
+    self.scaleX, self.scaleY
+  )
 end
 
-function sprite:setQuad(a, b, width, height)
-  self.quad = love.graphics.newQuad(a, b, width, height, self.texture:getDimensions())
+function Sprite:getWidth()
+  return self.image:getWidth()/self.frameCount
 end
 
-function sprite:draw(x, y, r, sx, sy, ox, oy, kx, ky)
-  love.graphics.draw(self.texture, self.quad, x, y, r, sx, sy, ox, oy, kx, ky)
+function Sprite:getHeight()
+  return self.image:getHeight()
 end
-
---function sprite:draw(quad, x, y, r, sx, sy, ox, oy, kx, ky)
---  love.graphics.draw(self.texture, quad, x, y, r, sx, sy, ox, oy, kx, ky)
---end
-
-return sprite

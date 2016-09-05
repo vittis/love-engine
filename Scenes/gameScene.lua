@@ -1,38 +1,35 @@
-local gameScene = {}
-
-local Engine = require('engine')
-
-local x, y
-
+gameScene.name = 'gameScene'
+local sp2
+local tileset
+local tilemap
+--gamestate callback
 function gameScene:init()
-  x, y = 50, 50
+  player = Player(0, 0)
+
   love.graphics.setBackgroundColor(255, 235, 205)
-end
 
-function gameScene:update()
-  if (love.keyboard.isDown('up')) then
-    y=y-10
-  end
-  if (love.keyboard.isDown('down')) then
-    y=y+10
-  end
-  if (love.keyboard.isDown('left')) then
-    x=x-10
-  end
-  if (love.keyboard.isDown('right')) then
-    x=x+10
-  end
-end
+  sp2 = Sprite:_init('Assets/barco.png', 4, 0.3)
 
+  tileset = Tileset:new('Assets/spritesheet.png', 64, 64)
+  tilemap = Tilemap:new('Assets/mapteste.csv', tileset)
+end
+function titleScene:enter(previous)
+end
 function gameScene:draw()
-  love.graphics.setColor(0, 0, 255)
-  love.graphics.rectangle('fill', x, y, 200, 200)
+  love.graphics.setColor(255, 255, 255)
+  tilemap:draw()
+  sp2:draw(200, 150)
+
+  player:draw()
+end
+
+function gameScene:update(dt)
+  player:update(dt)
+  sp2:update(dt)
 end
 
 function gameScene:keypressed(k)
 	if (k == 'space') then
-		engine:switch('titleScene')
+		engine:switch(titleScene)
 	end
 end
-
-return gameScene

@@ -1,16 +1,16 @@
 local csv = require('csv')
 
-tilemap = {tileset, tileMatrix={}, rows=0, cols=0}
+Tilemap = {}
+Tilemap.__index = Tilemap
 
-function tilemap:new(o, file,  tileset)
-  o = o or {}
-  setmetatable(o, self)
-  self.__index = self
+function Tilemap:new(file, tileset)
+  local self = setmetatable({}, Tilemap)
 
   self.tileset = tileset
-
-  local f = csv.open('Assets/map.csv')
-  local tileMatrix = {}
+  local f = csv.open(file)
+  self.rows = 0
+  self.cols = 0
+  self.tileMatrix = {}
 
   for fields in f:lines() do
     self.rows = self.rows + 1
@@ -21,24 +21,26 @@ function tilemap:new(o, file,  tileset)
   self.cols = #self.tileMatrix/self.rows
   f:close()
 
-  return o
+  self.tilesetBatch = love.graphics.newSpriteBatch(tileset.atlas, self.rows * self.cols)
+
+  for j=0, self.rows-1 do
+    for i=0, self.cols-1 do
+      self.tilesetBatch:add(self.tileset.tiles[self:At(i, j)], i*self.tileset.tileWidth, j*self.tileset.tileHeight)
+    end
+  end
+
+  self.tilesetBatch:flush()
+
+  return self
 end
 
-function tilemap:at(x, y, z)
+function Tilemap:At(x, y, z)
   z = z or 0
-  local aux = x+1 + y*self.rows + z*self.rows*self.cols
-  --print(self.tileMatrix[aux])
-  return self.tileMatrix[aux];
+  local aux = x + y*self.cols + z*self.rows*self.cols
+
+  return self.tileMatrix[aux+1];
 end
 
-function tilemap:draw()
-		for j=0, self.cols-1 do
-			for i=0, self.rows-1 do
-        self.tileset:draw(self:at(i, j), i*self.tileset.tileWidth, j*self.tileset.tileHeight)
-         --tileSet->Render(At(i,j,k), cameraX + i*tileSet->GetTileWidth(), cameraY + j*tileSet->GetTileHeight());
-			end
-		end
+function Tilemap:draw()
+  love.graphics.draw(self.tilesetBatch)
 end
-
-
-return tilemap
