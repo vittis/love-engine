@@ -41,6 +41,6 @@ function Tilemap:At(x, y, z)
   return self.tileMatrix[aux+1];
 end
 
-function Tilemap:draw()
+function Tilemap:draw(offset_x, offset_y)
   love.graphics.draw(self.tilesetBatch)
 end
