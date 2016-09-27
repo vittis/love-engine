@@ -12,6 +12,7 @@ function titleScene:init()
 end
 
 function titleScene:enter(previous)
+
 end
 
 function titleScene:update(dt)

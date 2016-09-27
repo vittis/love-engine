@@ -1,11 +1,18 @@
 gameScene.name = 'gameScene'
+--Variaveis locais da cena
 local sp2
 local tileset
 local tilemap
-
 local t, shakeDuration, shakeMagnitude = 0, -1, 0
-Camera = require "hump.camera"
---gamestate callback
+local startShake
+local gameTime=0
+--------------------------
+function gameScene:enter(previous)
+  if (engine.previousState.name ~= 'introScene') then
+    engine:push(introScene)
+  end
+end
+--------------------------
 function gameScene:init()
   player = Player(0, 0)
 
@@ -15,36 +22,41 @@ function gameScene:init()
 
   tileset = Tileset:new('Assets/spritesheet.png', 64, 64)
   tilemap = Tilemap:new('Assets/mapteste.csv', tileset)
-
-  camera = Camera(love.graphics.getWidth()/2, love.graphics.getHeight()/2, 0.9)
 end
-
+--------------------------
 function gameScene:update(dt)
+  gameTime = gameTime + dt
+
   player:update(dt)
   sp2:update(dt)
-  if (camera.scale<1) then
-    camera:zoomTo(camera.scale+dt*0.05)
-  end
-  
   if t < shakeDuration then
       t = t + dt
   end
 end
 
 function gameScene:draw()
-  camera:attach()
+  love.graphics.setColor(255, 255, 255)
+
+  for i=0, tilemap.rows+1 do
+    for j=0, tilemap.cols+1 do
+      if (j==0 or j==tilemap.cols+1 or i ==0 or i==tilemap.rows+1) then
+        tileset:draw(26, -64+(j*64), -64+(i*64))
+      end
+    end
+  end
+  tilemap:draw()
 
   if t < shakeDuration then
     local dx = love.math.random(-shakeMagnitude, shakeMagnitude)
     local dy = love.math.random(-shakeMagnitude, shakeMagnitude)
     love.graphics.translate(dx, dy)
   end
-  love.graphics.setColor(255, 255, 255)
-  tilemap:draw()
   sp2:draw(300, 300)
   player:draw()
 
-  camera:detach()
+
+  love.graphics.print(string.format("%1.0f",gameTime), 100, 100)
+
 end
 
 function gameScene:keypressed(k)
@@ -56,8 +68,6 @@ function gameScene:keypressed(k)
 	end
 end
 
-function startShake(duration, magnitude)
+startShake = function (duration, magnitude)
     t, shakeDuration, shakeMagnitude = 0, duration or 1, magnitude or 5
 end
---function titleScene:enter(previous)
---end

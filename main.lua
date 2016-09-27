@@ -4,10 +4,12 @@ engine = require('engine')
 gameScene = {}
 titleScene = {}
 pauseScene = {}
+introScene = {}
 --cenas
 require('Scenes.titleScene')
 require('Scenes.gameScene')
 require('Scenes.pauseScene')
+require('Scenes.introScene')
 --classes
 require('sprite')
 require('tileset')
@@ -15,6 +17,7 @@ require('tilemap')
 require('rect')
 require('gameobject')
 require('player')
+Camera = require "hump.camera"
 
 function love.load()
   engine:init()
@@ -25,7 +28,7 @@ function love.draw()
 end
 
 function love.update(dt)
-      
+
 end
 
 function love.keypressed(k)

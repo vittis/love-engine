@@ -28,7 +28,6 @@ function Player:_init(x, y)
   self.sprite   = Sprite:_init(PLAYER_IMAGE, 4, 0.3)
   self.velocity = PLAYER_VELOCITY
   self.rect      = Rect(x, y, self.sprite:getWidth(), self.sprite:getHeight())
-
 end
 
 function Player:update(dt)
